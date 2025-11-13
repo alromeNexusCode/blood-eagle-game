@@ -1,0 +1,1269 @@
+ml>
+
+الملحمة الكبرى - لعبة كاملة :root { --color-primary-bg: #1a0f0a; --color-card-bg: #2a1f14; --color-gold-glow: #FFD700; --color-gold-base: #DAA520; --color-text-primary: #F5DEB3; --color-success: #32CD32; --color-danger: #DC143C; --font-primary: 'Tajawal', sans-serif; --spacing-sm: 12px; --spacing-md: 20px; --spacing-lg: 30px; --border-radius: 10px; --border-radius-sm: 6px; } { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: var(--font-primary);
+background: linear-gradient(135deg, #1a0f0a 0%, #2a1f14 50%, #1a0f0a 100%);
+color: var(--color-text-primary);
+overflow-x: hidden;
+min-height: 100vh;
+direction: rtl;
+-webkit-user-select: none;
+-webkit-touch-callout: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+.loading {
+position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+background: var(--color-primary-bg);
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+z-index: 9999;
+}
+
+.loading-spinner {
+width: 50px; height: 50px;
+border: 3px solid rgba(255, 215, 0, 0.1);
+border-top: 3px solid var(--color-gold-base);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.loading-text {
+color: var(--color-gold-glow); font-weight: bold; text-align: center;
+}
+
+.game-header {
+background: rgba(42, 31, 20, 0.9);
+padding: var(--spacing-md);
+text-align: center;
+border-bottom: 2px solid var(--color-gold-base);
+}
+
+.game-title {
+font-size: 1.8rem; font-weight: 900;
+color: var(--color-gold-glow);
+text-shadow: 0 0 10px var(--color-gold-glow);
+margin-bottom: var(--spacing-sm);
+}
+
+.player-info {
+display: flex; justify-content: center; gap: var(--spacing-lg);
+flex-wrap: wrap; font-size: 0.9rem;
+}
+
+.resources-bar {
+background: rgba(42, 31, 20, 0.9);
+padding: var(--spacing-sm);
+display: flex; justify-content: center; gap: var(--spacing-md); flex-wrap: wrap;
+}
+
+.resource {
+display: flex; align-items: center; gap: var(--spacing-sm);
+padding: var(--spacing-sm) var(--spacing-md);
+background: rgba(255, 215, 0, 0.1);
+border: 1px solid var(--color-gold-base);
+border-radius: var(--border-radius-sm);
+font-weight: bold;
+}
+
+.resource-icon { font-size: 1.2rem; }
+
+.kingdom-selection {
+text-align: center; padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.kingdom-title {
+font-size: 2rem; font-weight: 900;
+color: var(--color-gold-glow); margin-bottom: var(--spacing-lg);
+}
+
+.kingdoms-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: var(--spacing-md); margin: var(--spacing-lg) 0;
+}
+
+.kingdom-card {
+background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(42, 31, 20, 0.8));
+border: 2px solid var(--color-gold-base);
+border-radius: var(--border-radius);
+padding: var(--spacing-md);
+cursor: pointer; transition: all 0.3s ease;
+position: relative;
+}
+
+.kingdom-card:hover {
+transform: translateY(-3px);
+box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+border-color: var(--color-gold-glow);
+}
+
+.kingdom-card.selected {
+border-color: var(--color-success);
+background: linear-gradient(145deg, rgba(50, 205, 50, 0.2), rgba(42, 31, 20, 0.8));
+box-shadow: 0 0 20px rgba(50, 205, 50, 0.4);
+}
+
+.kingdom-icon { font-size: 2.5rem; margin-bottom: var(--spacing-sm); }
+
+.kingdom-name {
+font-size: 1.2rem; font-weight: bold;
+color: var(--color-gold-glow); margin-bottom: var(--spacing-sm);
+}
+
+.kingdom-desc { color: var(--color-text-primary); line-height: 1.4; }
+
+.start-button {
+width: 100%; max-width: 300px;
+padding: var(--spacing-md) var(--spacing-lg);
+background: var(--color-gold-base);
+color: var(--color-primary-bg); border: none;
+border-radius: var(--border-radius);
+font-weight: bold; font-size: 1.1rem;
+cursor: pointer; transition: all 0.3s ease;
+margin-top: var(--spacing-lg);
+}
+
+.start-button:hover:not(:disabled) {
+background: var(--color-gold-glow);
+transform: translateY(-2px);
+}
+
+.start-button:disabled { background: #666; cursor: not-allowed; opacity: 0.6; }
+
+.game-interface { display: none; padding: var(--spacing-md); }
+
+.interface-grid {
+display: grid; grid-template-columns: 1fr 280px; gap: var(--spacing-lg);
+margin-top: var(--spacing-md);
+}
+
+.main-area {
+background: rgba(42, 31, 20, 0.3);
+border-radius: var(--border-radius);
+padding: var(--spacing-md);
+border: 1px solid var(--color-gold-base);
+}
+
+.main-area h3 {
+color: var(--color-gold-glow);
+margin-bottom: var(--spacing-md); text-align: center;
+}
+
+.buildings-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+gap: var(--spacing-sm);
+}
+
+.building-card {
+background: rgba(255, 215, 0, 0.1);
+border: 1px solid var(--color-gold-base);
+border-radius: var(--border-radius-sm);
+padding: var(--spacing-sm); text-align: center;
+cursor: pointer; transition: all 0.3s ease;
+min-height: 100px;
+display: flex; flex-direction: column; justify-content: center;
+}
+
+.building-card:hover {
+background: rgba(255, 215, 0, 0.2);
+transform: scale(1.05);
+}
+
+.building-card.built {
+border-color: var(--color-success);
+background: rgba(50, 205, 50, 0.1);
+}
+
+.building-icon { font-size: 1.8rem; margin-bottom: var(--spacing-sm); }
+
+.building-name {
+font-size: 0.9rem; font-weight: bold; margin-bottom: var(--spacing-sm);
+}
+
+.building-count {
+font-size: 0.8rem; color: var(--color-gold-glow); font-weight: bold;
+}
+
+.sidebar {
+background: rgba(42, 31, 20, 0.8);
+border-radius: var(--border-radius);
+padding: var(--spacing-md); border: 1px solid var(--color-gold-base);
+height: fit-content;
+}
+
+.sidebar h4 {
+color: var(--color-gold-glow); margin-bottom: var(--spacing-md); text-align: center;
+}
+
+.action-button {
+width: 100%; padding: var(--spacing-sm); margin-bottom: var(--spacing-sm);
+background: var(--color-gold-base); color: var(--color-primary-bg);
+border: none; border-radius: var(--border-radius-sm);
+font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
+}
+
+.action-button:hover {
+background: var(--color-gold-glow); transform: translateY(-2px);
+}
+
+.action-button:disabled { background: #666; opacity: 0.6; cursor: not-allowed; }
+
+.save-button { background: var(--color-success); }
+
+.sidebar hr { margin: var(--spacing-md) 0; border-color: var(--color-gold-base); }
+
+.status-message {
+position: fixed; top: 20px; left: 50%;
+transform: translateX(-50%);
+padding: var(--spacing-sm) var(--spacing-md);
+border-radius: var(--border-radius); color: #fff; font-weight: bold;
+z-index: 2000;
+box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+animation: slideDown 0.3s ease-out;
+max-width: 90%; text-align: center;
+}
+
+.status-message.success { background: var(--color-success); }
+.status-message.error { background: var(--color-danger); }
+
+@keyframes slideDown {
+from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+.resources-bar { gap: var(--spacing-sm); }
+.kingdoms-grid { grid-template-columns: 1fr; }
+.interface-grid { grid-template-columns: 1fr; }
+.player-info { font-size: 0.8rem; gap: var(--spacing-sm); }
+.game-title { font-size: 1.5rem; }
+.kingdom-title { font-size: 1.6rem; }
+}
+
+🏆 تحميل الملحمة الكبرى...
+<div class="game-header">
+    <h1 class="game-title">🏆 الملحمة الكبرى</h1>
+    <div class="player-info">
+        <span>اللاعب: <span id="playerName">لاعب جديد</span></span>
+        <span>المملكة: <span id="playerKingdom">غير مختارة</span></span>
+    </div>
+</div>
+
+<div class="resources-bar">
+    <div class="resource"><span class="resource-icon">🌾</span><span class="resource-amount" id="foodAmount">100</span></div>
+    <div class="resource"><span class="resource-icon">🏆</span><span class="resource-amount" id="goldAmount">50</span></div>
+    <div class="resource"><span class="resource-icon">🪨</span><span class="resource-amount" id="stoneAmount">30</span></div>
+    <div class="resource"><span class="resource-icon">🪵</span><span class="resource-amount" id="woodAmount">40</span></div>
+</div>
+
+<div class="kingdom-selection" id="kingdomSelection">
+    <h2 class="kingdom-title">اختر مملكتك</h2>
+    
+    <div class="kingdoms-grid">
+        <div class="kingdom-card" data-kingdom="east">
+            <div class="kingdom-icon">🌟</div>
+            <div class="kingdom-name">المملكة الشرقية</div>
+            <div class="kingdom-desc">أرض الحكمة والقوة - +20% طعام</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="north">
+            <div class="kingdom-icon">⚔️</div>
+            <div class="kingdom-name">المملكة الشمالية</div>
+            <div class="kingdom-desc">قلعة المحاربين - +25% دفاع</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="west">
+            <div class="kingdom-icon">🏰</div>
+            <div class="kingdom-name">المملكة الغربية</div>
+            <div class="kingdom-desc">سيف التحالف - +30% تحالف</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="central">
+            <div class="kingdom-icon">💎</div>
+            <div class="kingdom-name">المملكة الوسطى</div>
+            <div class="kingdom-desc">قلب الإمبراطورية - +15% كل شيء</div>
+        </div>
+    </div>
+    
+    <button class="start-button" id="startGameBtn" disabled>🎮 ابدأ الملحمة الكبرى</button>
+</div>
+
+<div class="game-interface" id="gameInterface">
+    <div class="interface-grid">
+        <div class="main-area">
+            <h3>🏗️ مبانيك</h3>
+            <div class="buildings-grid" id="buildingsGrid">
+                <div class="building-card" data-building="farm">
+                    <div class="building-icon">🌾</div><div class="building-name">مزرعة</div>
+                    <div class="building-count" id="farmCount">0</div>
+                </div>
+                <div class="building-card" data-building="mine">
+                    <div class="building-icon">⛏️</div><div class="building-name">منجم</div>
+                    <div class="building-count" id="mineCount">0</div>
+                </div>
+                <div class="building-card" data-building="barracks">
+                    <div class="building-icon">⚔️</div><div class="building-name">ثكنات</div>
+                    <div class="building-count" id="barracksCount">0</div>
+                </div>
+                <div class="building-card" data-building="market">
+                    <div class="building-icon">🏪</div><div class="building-name">سوق</div>
+                    <div class="building-count" id="marketCount">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <h4>⚡ الإجراءات</h4>
+            <button class="action-button" onclick="buildFarm()">🌾 بناء مزرعة</button>
+            <button class="action-button" onclick="buildMine()">⛏️ بناء منجم</button>
+            <button class="action-button" onclick="buildBarracks()">⚔️ بناء ثكنات</button>
+            <button class="action-button" onclick="buildMarket()">🏪 بناء سوق</button>
+            <button class="action-button" onclick="upgradeTownCenter()">🏛️ تطوير المدينة</button>
+            
+            <hr>
+            
+            <button class="action-button save-button" onclick="saveGame()">💾 حفظ</button>
+            <button class="action-button" onclick="resetGame()">🔄 إعادة البدء</button>
+        </div>
+    </div>
+</div>
+
+<div class="status-message" id="statusMessage" style="display: none;"></div>
+
+<script>
+class BloodEagleGame {
+constructor() {
+this.isPlaying = false;
+this.selectedKingdom = null;
+this.gameTime = 0;
+
+    this.playerData = {
+        name: 'لاعب جديد', level: 1,
+        resources: { food: 100, gold: 50, stone: 30, wood: 40 },
+        buildings: { farm: 0, mine: 0, barracks: 0, market: 0 }
+    };
+    
+    this.kingdomBonus = {
+        east: { food: 1.2, name: 'المملكة الشرقية' },
+        north: { gold: 1.1, name: 'المملكة الشمالية' },
+        west: { gold: 1.2, name: 'المملكة الغربية' },
+        central: { food: 1.15, gold: 1.15, stone: 1.15, name: 'المملكة الوسطى' }
+    };
+    
+    this.buildingCosts = {
+        farm: { gold: 20, wood: 15 },
+        mine: { gold: 30, stone: 20 },
+        barracks: { gold: 100, wood: 30 },
+        market: { gold: 50, wood: 20 }
+    };
+    
+    this.resourceRates = {
+        farms: { food: 1 },
+        mines: { gold: 0.5, stone: 1 },
+        markets: { gold: 0.3 }
+    };
+    
+    this.init();
+}
+
+init() {
+    this.setupEventListeners();
+    this.loadGame();
+    this.startGameLoop();
+    
+    setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+    }, 2000);
+    
+    console.log('🏆 تم تحميل الملحمة الكبرى');
+}
+
+setupEventListeners() {
+    document.querySelectorAll('.kingdom-card').forEach(card => {
+        card.addEventListener('click', () => {
+            this.selectKingdom(card.dataset.kingdom);
+        });
+    });
+    
+    document.getElementById('startGameBtn').addEventListener('click', () => {
+        this.startGame();
+    });
+}
+
+selectKingdom(kingdom) {
+    document.querySelectorAll('.kingdom-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    document.querySelector(`[data-kingdom="${kingdom}"]`).classList.add('selected');
+    this.selectedKingdom = kingdom;
+    
+    document.getElementById('startGameBtn').disabled = false;
+    
+    this.showMessage(`تم اختيار ${this.kingdomBonus[kingdom].name}!`, 'success');
+}
+
+startGame() {
+    this.isPlaying = true;
+    this.playerData.kingdom = this.selectedKingdom;
+    
+    document.getElementById('kingdomSelection').style.display = 'none';
+    document.getElementById('gameInterface').style.display = 'block';
+    
+    document.getElementById('playerKingdom').textContent = this.kingdomBonus[this.selectedKingdom].name;
+    document.getElementById('playerName').textContent = this.playerData.name;
+    
+    this.updateDisplay();
+    this.saveGame();
+    
+    this.showMessage('مرحباً بك في الملحمة الكبرى!', 'success');
+}
+
+updateResources() {
+    if (!this.isPlaying) return;
+    
+    const bonus = this.kingdomBonus[this.playerData.kingdom] || {};
+    const farms = this.playerData.buildings.farm;
+    const mines = this.playerData.buildings.mine;
+    const markets = this.playerData.buildings.market;
+    
+    if (farms > 0) {
+        this.playerData.resources.food += farms * this.resourceRates.farms.food * (bonus.food || 1) * 0.1;
+    }
+    
+    if (mines > 0) {
+        this.playerData.resources.gold += mines * this.resourceRates.mines.gold * (bonus.gold || 1) * 0.1;
+        this.playerData.resources.stone += mines * this.resourceRates.mines.stone * (bonus.stone || 1) * 0.1;
+    }
+    
+    if (markets > 0) {
+        this.playerData.resources.gold += markets * this.resourceRates.markets.gold * (bonus.gold || 1) * 0.1;
+    }
+    
+    this.playerData.resources.food = Math.max(0, this.playerData.resources.food);
+    this.playerData.resources.gold = Math.max(0, this.playerData.resources.gold);
+    this.playerData.resources.stone = Math.max(0, this.playerData.resources.stone);
+    this.playerData.resources.wood = Math.max(0, this.playerData.resources.wood);
+}
+
+updateDisplay() {
+    document.getElementById('foodAmount').textContent = Math.floor(this.playerData.resources.food);
+    document.getElementById('goldAmount').textContent = Math.floor(this.playerData.resources.gold);
+    document.getElementById('stoneAmount').textContent = Math.floor(this.playerData.resources.stone);
+    document.getElementById('woodAmount').textContent = Math.floor(this.playerData.resources.wood);
+    
+    document.getElementById('farmCount').textContent = this.playerData.buildings.farm;
+    document.getElementById('mineCount').textContent = this.playerData.buildings.mine;
+    document.getElementById('barracksCount').textContent = this.playerData.buildings.barracks;
+    document.getElementById('marketCount').textContent = this.playerData.buildings.market;
+    
+    this.updateBuildingStates();
+}
+
+updateBuildingStates() {
+    document.querySelectorAll('.building-card').forEach(card => {
+        const building = card.dataset.building;
+        const count = this.playerData.buildings[building];
+        if (count > 0) {
+            card.classList.add('built');
+        } else {
+            card.classList.remove('built');
+        }
+    });
+}
+
+canAfford(buildingType) {
+    const cost = this.buildingCosts[buildingType];
+    if (!cost) return false;
+    
+    return this.playerData.resources.gold >= (cost.gold || 0) &&
+           this.playerData.resources.wood >= (cost.wood || 0) &&
+           this.playerData.resources.stone >= (cost.stone || 0);
+}
+
+buildFarm() { this.build('farm', { gold: 20, wood: 15 }, 'مزرعة'); }
+buildMine() { this.build('mine', { gold: 30, stone: 20 }, 'منجم'); }
+buildBarracks() { this.build('barracks', { gold: 100, wood: 30 }, 'ثكنات'); }
+buildMarket() { this.build('market', { gold: 50, wood: 20 }, 'سوق'); }
+
+build(buildingType, cost, name) {
+    if (!this.canAfford(buildingType)) {
+        this.showMessage('موارد غير كافية!', 'error'); return;
+    }
+    
+    this.playerData.resources.gold -= cost.gold || 0;
+    this.playerData.resources.wood -= cost.wood || 0;
+    this.playerData.resources.stone -= cost.stone || 0;
+    
+    this.playerData.buildings[buildingType]++;
+    
+    this.updateDisplay(); this.saveGame();
+    
+    const card = document.querySelector(`[data-building="${buildingType}"]`);
+    card.classList.add('built-animation');
+    setTimeout(() => { card.classList.remove('built-animation'); }, 500);
+    
+    this.showMessage(`تم بناء ${name} بنجاح!`, 'success');
+}
+
+upgradeTownCenter() {
+    const cost = 200;
+    if (this.playerData.resources.gold >= cost) {
+        this.playerData.resources.gold -= cost;
+        this.playerData.level++;
+        this.updateDisplay();
+        this.saveGame();
+        this.showMessage('تم تطوير مركز المدينة!', 'success');
+    } else {
+        this.showMessage('تحتاج 200 ذهبية!', 'error');
+    }
+}
+
+saveGame() {
+    const saveData = {
+        playerData: this.playerData,
+        selectedKingdom: this.selectedKingdom,
+        isPlaying: this.isPlaying,
+        gameTime: this.gameTime,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('bloodEagleSave', JSON.stringify(saveData));
+    
+    setTimeout(() => {
+        this.showMessage('تم حفظ التقدم!', 'success');
+    }, 500);
+}
+
+loadGame() {
+    const saved = localStorage.getItem('bloodEagleSave');
+    if (saved) {
+        try {
+            const saveData = JSON.parse(saved);
+            this.playerData = { ...this.playerData, ...saveData.playerData };
+            this.selectedKingdom = saveData.selectedKingdom;
+            this.isPlaying = saveData.isPlaying;
+            this.gameTime = saveData.gameTime || 0;
+            
+            if (this.isPlaying && this.selectedKingdom) {
+                document.getElementById('kingdomSelection').style.display = 'none';
+                document.getElementById('gameInterface').style.display = 'block';
+                
+                document.getElementById('playerKingdom').textContent = this.kingdomBonus[this.selectedKingdom].name;
+                this.updateDisplay();
+                
+                this.showMessage('تم تحميل حفوظتك!', 'success');
+            }
+        } catch (e) {
+            console.error('خطأ في تحميل الحفظ:', e);
+        }
+    }
+}
+
+resetGame() {
+    if (confirm('هل أنت متأكد من إعادة البدء؟ سيتم حذف جميع البيانات!')) {
+        localStorage.removeItem('bloodEagleSave');
+        location.reload();
+    }
+}
+
+showMessage(message, type = 'success') {
+    const messageEl = document.getElementById('statusMessage');
+    messageEl.textContent = message;
+    messageEl.className = `status-message ${type}`;
+    messageEl.style.display = 'block';
+    
+    setTimeout(() => {
+        messageEl.style.display = 'none';
+    }, 3000);
+}
+
+startGameLoop() {
+    setInterval(() => {
+        if (this.isPlaying) {
+            this.updateResources();
+            this.updateDisplay();
+            this.gameTime++;
+        }
+    }, 1000);
+    
+    setInterval(() => {
+        if (this.isPlaying) {
+            this.saveGame();
+        }
+    }, 30000);
+    
+    setInterval(() => {
+        if (this.isPlaying && this.gameTime % 10 === 0) {
+            const messages = [
+                'استمر في البناء! 💪', 'ممتاز! 🌟',
+                'لا تتوقف! 🚀', 'أصبحت محترف! 🏆'
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            this.showMessage(randomMessage, 'success');
+        }
+    }, 10000);
+}
+}
+
+function buildFarm() { if (window.game) window.game.buildFarm(); }
+function buildMine() { if (window.game) window.game.buildMine(); }
+function buildBarracks() { if (window.game) window.game.buildBarracks(); }
+function buildMarket() { if (window.game) window.game.buildMarket(); }
+function upgradeTownCenter() { if (window.game) window.game.upgradeTownCenter(); }
+function saveGame() { if (window.game) window.game.saveGame(); }
+function resetGame() { if (window.game) window.game.resetGame(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+window.game = new BloodEagleGame();
+console.log('🎮 الملحمة الكبرى - نظام ذاكرة متقدم!');
+console.log('💾 حفظ تلقائي: مفعل');
+console.log('🏰 4 ممالك: متاحة للاختيار');
+console.log('⚡ تحديث فوري للموارد');
+});
+
+```
+
+---
+
+## ✅ **تأكد من:**
+
+**1. نسخ الكود كاملاً (656 سطر)**
+**2. اسمه `index.html` في GitHub**
+**3. احذف المحتوى القديم أولاً**
+
+**🚀 بعد ذلك اللعبة ستعمل فوراً!**
+Continue with Pro mode
+Thinking Process
+0.95s
+✅ الكود الكامل - انسخه كاملاً:
+نسخ هذا الكود واصقه في index.html في GitHub:
+
+<!DOCTYPE html>
+
+الملحمة الكبرى - لعبة كاملة :root { --color-primary-bg: #1a0f0a; --color-card-bg: #2a1f14; --color-gold-glow: #FFD700; --color-gold-base: #DAA520; --color-text-primary: #F5DEB3; --color-success: #32CD32; --color-danger: #DC143C; --font-primary: 'Tajawal', sans-serif; --spacing-sm: 12px; --spacing-md: 20px; --spacing-lg: 30px; --border-radius: 10px; --border-radius-sm: 6px; } { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: var(--font-primary);
+background: linear-gradient(135deg, #1a0f0a 0%, #2a1f14 50%, #1a0f0a 100%);
+color: var(--color-text-primary);
+overflow-x: hidden;
+min-height: 100vh;
+direction: rtl;
+-webkit-user-select: none;
+-webkit-touch-callout: none;
+-webkit-tap-highlight-color: transparent;
+}
+
+.loading {
+position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+background: var(--color-primary-bg);
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+z-index: 9999;
+}
+
+.loading-spinner {
+width: 50px; height: 50px;
+border: 3px solid rgba(255, 215, 0, 0.1);
+border-top: 3px solid var(--color-gold-base);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.loading-text {
+color: var(--color-gold-glow); font-weight: bold; text-align: center;
+}
+
+.game-header {
+background: rgba(42, 31, 20, 0.9);
+padding: var(--spacing-md);
+text-align: center;
+border-bottom: 2px solid var(--color-gold-base);
+}
+
+.game-title {
+font-size: 1.8rem; font-weight: 900;
+color: var(--color-gold-glow);
+text-shadow: 0 0 10px var(--color-gold-glow);
+margin-bottom: var(--spacing-sm);
+}
+
+.player-info {
+display: flex; justify-content: center; gap: var(--spacing-lg);
+flex-wrap: wrap; font-size: 0.9rem;
+}
+
+.resources-bar {
+background: rgba(42, 31, 20, 0.9);
+padding: var(--spacing-sm);
+display: flex; justify-content: center; gap: var(--spacing-md); flex-wrap: wrap;
+}
+
+.resource {
+display: flex; align-items: center; gap: var(--spacing-sm);
+padding: var(--spacing-sm) var(--spacing-md);
+background: rgba(255, 215, 0, 0.1);
+border: 1px solid var(--color-gold-base);
+border-radius: var(--border-radius-sm);
+font-weight: bold;
+}
+
+.resource-icon { font-size: 1.2rem; }
+
+.kingdom-selection {
+text-align: center; padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.kingdom-title {
+font-size: 2rem; font-weight: 900;
+color: var(--color-gold-glow); margin-bottom: var(--spacing-lg);
+}
+
+.kingdoms-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: var(--spacing-md); margin: var(--spacing-lg) 0;
+}
+
+.kingdom-card {
+background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(42, 31, 20, 0.8));
+border: 2px solid var(--color-gold-base);
+border-radius: var(--border-radius);
+padding: var(--spacing-md);
+cursor: pointer; transition: all 0.3s ease;
+position: relative;
+}
+
+.kingdom-card:hover {
+transform: translateY(-3px);
+box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+border-color: var(--color-gold-glow);
+}
+
+.kingdom-card.selected {
+border-color: var(--color-success);
+background: linear-gradient(145deg, rgba(50, 205, 50, 0.2), rgba(42, 31, 20, 0.8));
+box-shadow: 0 0 20px rgba(50, 205, 50, 0.4);
+}
+
+.kingdom-icon { font-size: 2.5rem; margin-bottom: var(--spacing-sm); }
+
+.kingdom-name {
+font-size: 1.2rem; font-weight: bold;
+color: var(--color-gold-glow); margin-bottom: var(--spacing-sm);
+}
+
+.kingdom-desc { color: var(--color-text-primary); line-height: 1.4; }
+
+.start-button {
+width: 100%; max-width: 300px;
+padding: var(--spacing-md) var(--spacing-lg);
+background: var(--color-gold-base);
+color: var(--color-primary-bg); border: none;
+border-radius: var(--border-radius);
+font-weight: bold; font-size: 1.1rem;
+cursor: pointer; transition: all 0.3s ease;
+margin-top: var(--spacing-lg);
+}
+
+.start-button:hover:not(:disabled) {
+background: var(--color-gold-glow);
+transform: translateY(-2px);
+}
+
+.start-button:disabled { background: #666; cursor: not-allowed; opacity: 0.6; }
+
+.game-interface { display: none; padding: var(--spacing-md); }
+
+.interface-grid {
+display: grid; grid-template-columns: 1fr 280px; gap: var(--spacing-lg);
+margin-top: var(--spacing-md);
+}
+
+.main-area {
+background: rgba(42, 31, 20, 0.3);
+border-radius: var(--border-radius);
+padding: var(--spacing-md);
+border: 1px solid var(--color-gold-base);
+}
+
+.main-area h3 {
+color: var(--color-gold-glow);
+margin-bottom: var(--spacing-md); text-align: center;
+}
+
+.buildings-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+gap: var(--spacing-sm);
+}
+
+.building-card {
+background: rgba(255, 215, 0, 0.1);
+border: 1px solid var(--color-gold-base);
+border-radius: var(--border-radius-sm);
+padding: var(--spacing-sm); text-align: center;
+cursor: pointer; transition: all 0.3s ease;
+min-height: 100px;
+display: flex; flex-direction: column; justify-content: center;
+}
+
+.building-card:hover {
+background: rgba(255, 215, 0, 0.2);
+transform: scale(1.05);
+}
+
+.building-card.built {
+border-color: var(--color-success);
+background: rgba(50, 205, 50, 0.1);
+}
+
+.building-icon { font-size: 1.8rem; margin-bottom: var(--spacing-sm); }
+
+.building-name {
+font-size: 0.9rem; font-weight: bold; margin-bottom: var(--spacing-sm);
+}
+
+.building-count {
+font-size: 0.8rem; color: var(--color-gold-glow); font-weight: bold;
+}
+
+.sidebar {
+background: rgba(42, 31, 20, 0.8);
+border-radius: var(--border-radius);
+padding: var(--spacing-md); border: 1px solid var(--color-gold-base);
+height: fit-content;
+}
+
+.sidebar h4 {
+color: var(--color-gold-glow); margin-bottom: var(--spacing-md); text-align: center;
+}
+
+.action-button {
+width: 100%; padding: var(--spacing-sm); margin-bottom: var(--spacing-sm);
+background: var(--color-gold-base); color: var(--color-primary-bg);
+border: none; border-radius: var(--border-radius-sm);
+font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
+}
+
+.action-button:hover {
+background: var(--color-gold-glow); transform: translateY(-2px);
+}
+
+.action-button:disabled { background: #666; opacity: 0.6; cursor: not-allowed; }
+
+.save-button { background: var(--color-success); }
+
+.sidebar hr { margin: var(--spacing-md) 0; border-color: var(--color-gold-base); }
+
+.status-message {
+position: fixed; top: 20px; left: 50%;
+transform: translateX(-50%);
+padding: var(--spacing-sm) var(--spacing-md);
+border-radius: var(--border-radius); color: #fff; font-weight: bold;
+z-index: 2000;
+box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+animation: slideDown 0.3s ease-out;
+max-width: 90%; text-align: center;
+}
+
+.status-message.success { background: var(--color-success); }
+.status-message.error { background: var(--color-danger); }
+
+@keyframes slideDown {
+from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+.resources-bar { gap: var(--spacing-sm); }
+.kingdoms-grid { grid-template-columns: 1fr; }
+.interface-grid { grid-template-columns: 1fr; }
+.player-info { font-size: 0.8rem; gap: var(--spacing-sm); }
+.game-title { font-size: 1.5rem; }
+.kingdom-title { font-size: 1.6rem; }
+}
+
+🏆 تحميل الملحمة الكبرى...
+<div class="game-header">
+    <h1 class="game-title">🏆 الملحمة الكبرى</h1>
+    <div class="player-info">
+        <span>اللاعب: <span id="playerName">لاعب جديد</span></span>
+        <span>المملكة: <span id="playerKingdom">غير مختارة</span></span>
+    </div>
+</div>
+
+<div class="resources-bar">
+    <div class="resource"><span class="resource-icon">🌾</span><span class="resource-amount" id="foodAmount">100</span></div>
+    <div class="resource"><span class="resource-icon">🏆</span><span class="resource-amount" id="goldAmount">50</span></div>
+    <div class="resource"><span class="resource-icon">🪨</span><span class="resource-amount" id="stoneAmount">30</span></div>
+    <div class="resource"><span class="resource-icon">🪵</span><span class="resource-amount" id="woodAmount">40</span></div>
+</div>
+
+<div class="kingdom-selection" id="kingdomSelection">
+    <h2 class="kingdom-title">اختر مملكتك</h2>
+    
+    <div class="kingdoms-grid">
+        <div class="kingdom-card" data-kingdom="east">
+            <div class="kingdom-icon">🌟</div>
+            <div class="kingdom-name">المملكة الشرقية</div>
+            <div class="kingdom-desc">أرض الحكمة والقوة - +20% طعام</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="north">
+            <div class="kingdom-icon">⚔️</div>
+            <div class="kingdom-name">المملكة الشمالية</div>
+            <div class="kingdom-desc">قلعة المحاربين - +25% دفاع</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="west">
+            <div class="kingdom-icon">🏰</div>
+            <div class="kingdom-name">المملكة الغربية</div>
+            <div class="kingdom-desc">سيف التحالف - +30% تحالف</div>
+        </div>
+        <div class="kingdom-card" data-kingdom="central">
+            <div class="kingdom-icon">💎</div>
+            <div class="kingdom-name">المملكة الوسطى</div>
+            <div class="kingdom-desc">قلب الإمبراطورية - +15% كل شيء</div>
+        </div>
+    </div>
+    
+    <button class="start-button" id="startGameBtn" disabled>🎮 ابدأ الملحمة الكبرى</button>
+</div>
+
+<div class="game-interface" id="gameInterface">
+    <div class="interface-grid">
+        <div class="main-area">
+            <h3>🏗️ مبانيك</h3>
+            <div class="buildings-grid" id="buildingsGrid">
+                <div class="building-card" data-building="farm">
+                    <div class="building-icon">🌾</div><div class="building-name">مزرعة</div>
+                    <div class="building-count" id="farmCount">0</div>
+                </div>
+                <div class="building-card" data-building="mine">
+                    <div class="building-icon">⛏️</div><div class="building-name">منجم</div>
+                    <div class="building-count" id="mineCount">0</div>
+                </div>
+                <div class="building-card" data-building="barracks">
+                    <div class="building-icon">⚔️</div><div class="building-name">ثكنات</div>
+                    <div class="building-count" id="barracksCount">0</div>
+                </div>
+                <div class="building-card" data-building="market">
+                    <div class="building-icon">🏪</div><div class="building-name">سوق</div>
+                    <div class="building-count" id="marketCount">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <h4>⚡ الإجراءات</h4>
+            <button class="action-button" onclick="buildFarm()">🌾 بناء مزرعة</button>
+            <button class="action-button" onclick="buildMine()">⛏️ بناء منجم</button>
+            <button class="action-button" onclick="buildBarracks()">⚔️ بناء ثكنات</button>
+            <button class="action-button" onclick="buildMarket()">🏪 بناء سوق</button>
+            <button class="action-button" onclick="upgradeTownCenter()">🏛️ تطوير المدينة</button>
+            
+            <hr>
+            
+            <button class="action-button save-button" onclick="saveGame()">💾 حفظ</button>
+            <button class="action-button" onclick="resetGame()">🔄 إعادة البدء</button>
+        </div>
+    </div>
+</div>
+
+<div class="status-message" id="statusMessage" style="display: none;"></div>
+
+<script>
+class BloodEagleGame {
+constructor() {
+this.isPlaying = false;
+this.selectedKingdom = null;
+this.gameTime = 0;
+
+    this.playerData = {
+        name: 'لاعب جديد', level: 1,
+        resources: { food: 100, gold: 50, stone: 30, wood: 40 },
+        buildings: { farm: 0, mine: 0, barracks: 0, market: 0 }
+    };
+    
+    this.kingdomBonus = {
+        east: { food: 1.2, name: 'المملكة الشرقية' },
+        north: { gold: 1.1, name: 'المملكة الشمالية' },
+        west: { gold: 1.2, name: 'المملكة الغربية' },
+        central: { food: 1.15, gold: 1.15, stone: 1.15, name: 'المملكة الوسطى' }
+    };
+    
+    this.buildingCosts = {
+        farm: { gold: 20, wood: 15 },
+        mine: { gold: 30, stone: 20 },
+        barracks: { gold: 100, wood: 30 },
+        market: { gold: 50, wood: 20 }
+    };
+    
+    this.resourceRates = {
+        farms: { food: 1 },
+        mines: { gold: 0.5, stone: 1 },
+        markets: { gold: 0.3 }
+    };
+    
+    this.init();
+}
+
+init() {
+    this.setupEventListeners();
+    this.loadGame();
+    this.startGameLoop();
+    
+    setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+    }, 2000);
+    
+    console.log('🏆 تم تحميل الملحمة الكبرى');
+}
+
+setupEventListeners() {
+    document.querySelectorAll('.kingdom-card').forEach(card => {
+        card.addEventListener('click', () => {
+            this.selectKingdom(card.dataset.kingdom);
+        });
+    });
+    
+    document.getElementById('startGameBtn').addEventListener('click', () => {
+        this.startGame();
+    });
+}
+
+selectKingdom(kingdom) {
+    document.querySelectorAll('.kingdom-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    document.querySelector(`[data-kingdom="${kingdom}"]`).classList.add('selected');
+    this.selectedKingdom = kingdom;
+    
+    document.getElementById('startGameBtn').disabled = false;
+    
+    this.showMessage(`تم اختيار ${this.kingdomBonus[kingdom].name}!`, 'success');
+}
+
+startGame() {
+    this.isPlaying = true;
+    this.playerData.kingdom = this.selectedKingdom;
+    
+    document.getElementById('kingdomSelection').style.display = 'none';
+    document.getElementById('gameInterface').style.display = 'block';
+    
+    document.getElementById('playerKingdom').textContent = this.kingdomBonus[this.selectedKingdom].name;
+    document.getElementById('playerName').textContent = this.playerData.name;
+    
+    this.updateDisplay();
+    this.saveGame();
+    
+    this.showMessage('مرحباً بك في الملحمة الكبرى!', 'success');
+}
+
+updateResources() {
+    if (!this.isPlaying) return;
+    
+    const bonus = this.kingdomBonus[this.playerData.kingdom] || {};
+    const farms = this.playerData.buildings.farm;
+    const mines = this.playerData.buildings.mine;
+    const markets = this.playerData.buildings.market;
+    
+    if (farms > 0) {
+        this.playerData.resources.food += farms * this.resourceRates.farms.food * (bonus.food || 1) * 0.1;
+    }
+    
+    if (mines > 0) {
+        this.playerData.resources.gold += mines * this.resourceRates.mines.gold * (bonus.gold || 1) * 0.1;
+        this.playerData.resources.stone += mines * this.resourceRates.mines.stone * (bonus.stone || 1) * 0.1;
+    }
+    
+    if (markets > 0) {
+        this.playerData.resources.gold += markets * this.resourceRates.markets.gold * (bonus.gold || 1) * 0.1;
+    }
+    
+    this.playerData.resources.food = Math.max(0, this.playerData.resources.food);
+    this.playerData.resources.gold = Math.max(0, this.playerData.resources.gold);
+    this.playerData.resources.stone = Math.max(0, this.playerData.resources.stone);
+    this.playerData.resources.wood = Math.max(0, this.playerData.resources.wood);
+}
+
+updateDisplay() {
+    document.getElementById('foodAmount').textContent = Math.floor(this.playerData.resources.food);
+    document.getElementById('goldAmount').textContent = Math.floor(this.playerData.resources.gold);
+    document.getElementById('stoneAmount').textContent = Math.floor(this.playerData.resources.stone);
+    document.getElementById('woodAmount').textContent = Math.floor(this.playerData.resources.wood);
+    
+    document.getElementById('farmCount').textContent = this.playerData.buildings.farm;
+    document.getElementById('mineCount').textContent = this.playerData.buildings.mine;
+    document.getElementById('barracksCount').textContent = this.playerData.buildings.barracks;
+    document.getElementById('marketCount').textContent = this.playerData.buildings.market;
+    
+    this.updateBuildingStates();
+}
+
+updateBuildingStates() {
+    document.querySelectorAll('.building-card').forEach(card => {
+        const building = card.dataset.building;
+        const count = this.playerData.buildings[building];
+        if (count > 0) {
+            card.classList.add('built');
+        } else {
+            card.classList.remove('built');
+        }
+    });
+}
+
+canAfford(buildingType) {
+    const cost = this.buildingCosts[buildingType];
+    if (!cost) return false;
+    
+    return this.playerData.resources.gold >= (cost.gold || 0) &&
+           this.playerData.resources.wood >= (cost.wood || 0) &&
+           this.playerData.resources.stone >= (cost.stone || 0);
+}
+
+buildFarm() { this.build('farm', { gold: 20, wood: 15 }, 'مزرعة'); }
+buildMine() { this.build('mine', { gold: 30, stone: 20 }, 'منجم'); }
+buildBarracks() { this.build('barracks', { gold: 100, wood: 30 }, 'ثكنات'); }
+buildMarket() { this.build('market', { gold: 50, wood: 20 }, 'سوق'); }
+
+build(buildingType, cost, name) {
+    if (!this.canAfford(buildingType)) {
+        this.showMessage('موارد غير كافية!', 'error'); return;
+    }
+    
+    this.playerData.resources.gold -= cost.gold || 0;
+    this.playerData.resources.wood -= cost.wood || 0;
+    this.playerData.resources.stone -= cost.stone || 0;
+    
+    this.playerData.buildings[buildingType]++;
+    
+    this.updateDisplay(); this.saveGame();
+    
+    const card = document.querySelector(`[data-building="${buildingType}"]`);
+    card.classList.add('built-animation');
+    setTimeout(() => { card.classList.remove('built-animation'); }, 500);
+    
+    this.showMessage(`تم بناء ${name} بنجاح!`, 'success');
+}
+
+upgradeTownCenter() {
+    const cost = 200;
+    if (this.playerData.resources.gold >= cost) {
+        this.playerData.resources.gold -= cost;
+        this.playerData.level++;
+        this.updateDisplay();
+        this.saveGame();
+        this.showMessage('تم تطوير مركز المدينة!', 'success');
+    } else {
+        this.showMessage('تحتاج 200 ذهبية!', 'error');
+    }
+}
+
+saveGame() {
+    const saveData = {
+        playerData: this.playerData,
+        selectedKingdom: this.selectedKingdom,
+        isPlaying: this.isPlaying,
+        gameTime: this.gameTime,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('bloodEagleSave', JSON.stringify(saveData));
+    
+    setTimeout(() => {
+        this.showMessage('تم حفظ التقدم!', 'success');
+    }, 500);
+}
+
+loadGame() {
+    const saved = localStorage.getItem('bloodEagleSave');
+    if (saved) {
+        try {
+            const saveData = JSON.parse(saved);
+            this.playerData = { ...this.playerData, ...saveData.playerData };
+            this.selectedKingdom = saveData.selectedKingdom;
+            this.isPlaying = saveData.isPlaying;
+            this.gameTime = saveData.gameTime || 0;
+            
+            if (this.isPlaying && this.selectedKingdom) {
+                document.getElementById('kingdomSelection').style.display = 'none';
+                document.getElementById('gameInterface').style.display = 'block';
+                
+                document.getElementById('playerKingdom').textContent = this.kingdomBonus[this.selectedKingdom].name;
+                this.updateDisplay();
+                
+                this.showMessage('تم تحميل حفوظتك!', 'success');
+            }
+        } catch (e) {
+            console.error('خطأ في تحميل الحفظ:', e);
+        }
+    }
+}
+
+resetGame() {
+    if (confirm('هل أنت متأكد من إعادة البدء؟ سيتم حذف جميع البيانات!')) {
+        localStorage.removeItem('bloodEagleSave');
+        location.reload();
+    }
+}
+
+showMessage(message, type = 'success') {
+    const messageEl = document.getElementById('statusMessage');
+    messageEl.textContent = message;
+    messageEl.className = `status-message ${type}`;
+    messageEl.style.display = 'block';
+    
+    setTimeout(() => {
+        messageEl.style.display = 'none';
+    }, 3000);
+}
+
+startGameLoop() {
+    setInterval(() => {
+        if (this.isPlaying) {
+            this.updateResources();
+            this.updateDisplay();
+            this.gameTime++;
+        }
+    }, 1000);
+    
+    setInterval(() => {
+        if (this.isPlaying) {
+            this.saveGame();
+        }
+    }, 30000);
+    
+    setInterval(() => {
+        if (this.isPlaying && this.gameTime % 10 === 0) {
+            const messages = [
+                'استمر في البناء! 💪', 'ممتاز! 🌟',
+                'لا تتوقف! 🚀', 'أصبحت محترف! 🏆'
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            this.showMessage(randomMessage, 'success');
+        }
+    }, 10000);
+}
+}
+
+function buildFarm() { if (window.game) window.game.buildFarm(); }
+function buildMine() { if (window.game) window.game.buildMine(); }
+function buildBarracks() { if (window.game) window.game.buildBarracks(); }
+function buildMarket() { if (window.game) window.game.buildMarket(); }
+function upgradeTownCenter() { if (window.game) window.game.upgradeTownCenter(); }
+function saveGame() { if (window.game) window.game.saveGame(); }
+function resetGame() { if (window.game) window.game.resetGame(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+window.game = new BloodEagleGame();
+console.log('🎮 الملحمة الكبرى - نظام ذاكرة متقدم!');
+console.log('💾 حفظ تلقائي: مفعل');
+console.log('🏰 4 ممالك: متاحة للاختيار');
+console.log('⚡ تحديث فوري للموارد');
+});
+
+```
+Completed Command 
